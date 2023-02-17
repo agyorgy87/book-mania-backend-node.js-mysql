@@ -24,3 +24,7 @@ const server = app.listen(app.get("port"), function() {
 
     console.log("app listening:", port)
 })
+
+app.get("/img/bookread.jpg", function (req, res) {
+    res.sendFile(path.join(__dirname, "img/bookread.jpg"));
+})
