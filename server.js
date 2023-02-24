@@ -21,13 +21,11 @@ const con = mysql.createConnection({
 
 con.connect(
   function(err) {
-    if (err) throw err
-    
-  }
+    if (err) throw err}
 );
 
+//API for all books
 app.get("/get-all-books", (request,response) => {
-  
     con.query(`select book.id, title, number_of_page, genre.genre, publisher.publisher_name , author.author_name, price, image, newness from book
     inner join author on author.id = book.author
     inner join genre on genre.id = book.genre
@@ -38,6 +36,7 @@ app.get("/get-all-books", (request,response) => {
     });
 })
 
+//API for all newness books
 app.get("/get-all-newness", (request,response) => {
     con.query(`
     SELECT book.id, title, number_of_page, genre.genre, publisher_name, author_name, price, image, newness FROM book
@@ -52,43 +51,7 @@ app.get("/get-all-newness", (request,response) => {
     });
 })
 
-app.get("/get-all-genre", (request,response) => {
-  con.query(`SELECT * FROM genre`, function (err, result, fields) {
-    if (err) throw err;
-    console.log(result);
-    response.end(JSON.stringify(result));
-  })
-});
-
-app.get("/get-all-publisher", (request,response) => {
-  con.query(`SELECT * FROM publisher`, function (err, result, fields) {
-    if (err) throw err;
-    console.log(result);
-    response.end(JSON.stringify(result));
-  })
-});
-
-app.get("/get-publisher-id/:id", (request, response) => {
-  con.query(`SELECT * FROM publisher WHERE id = ${request.params.id}`, function (err, result, fields) {
-    if (err) throw err;
-    console.log(result);
-    response.end(JSON.stringify(result));
-  })
-})
-
-app.get("/get-book-id/:id", (request, response) => {
-  con.query(`
-  SELECT book.id, title, number_of_page, genre.genre, publisher_name, author_name, price, image, newness FROM book
-  INNER JOIN author on author.id = book.author
-  INNER JOIN genre on genre.id = book.genre
-  INNER JOIN publisher on publisher.id = book.publisher
-  WHERE book.id = ${request.params.id}`, function (err, result, fields) {
-    if (err) throw err;
-    console.log(result);
-    response.end(JSON.stringify(result));
-  })
-})
-
+//API for books title names
 app.get("/get-book-title/:titleName", (request, response) => {
   con.query(`
   SELECT book.id, title, number_of_page, genre.genre, publisher_name, author_name, price, image, newness FROM book
@@ -102,6 +65,16 @@ app.get("/get-book-title/:titleName", (request, response) => {
   })
 })
 
+//API for coupon code image
+app.get("/img/:filename", function (req, res) {
+    res.sendFile(path.join(__dirname, "img/" + req.params.filename));
+})
+
+//API for books image
+app.get("/books_img/:filename", function (req, res) {
+  res.sendFile(path.join(__dirname, "books_img/" + req.params.filename));
+})
+
 
 app.get("/", (request,response) => {
     const responseObject = {
@@ -109,6 +82,7 @@ app.get("/", (request,response) => {
     }
     response.end(JSON.stringify(responseObject));
 });
+
 
 const server = app.listen(app.get("port"), function() {
 
@@ -118,10 +92,46 @@ const server = app.listen(app.get("port"), function() {
     console.log("app listening:", port)
 })
 
-app.get("/img/:filename", function (req, res) {
-    res.sendFile(path.join(__dirname, "img/" + req.params.filename));
+//APIs which are not necessary
+/*
+//API for all publisher
+app.get("/get-all-publisher", (request,response) => {
+  con.query(`SELECT * FROM publisher`, function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+    response.end(JSON.stringify(result));
+  })
+});
+
+//API for publisher id
+app.get("/get-publisher-id/:id", (request, response) => {
+  con.query(`SELECT * FROM publisher WHERE id = ${request.params.id}`, function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+    response.end(JSON.stringify(result));
+  })
 })
 
-app.get("/books_img/:filename", function (req, res) {
-  res.sendFile(path.join(__dirname, "books_img/" + req.params.filename));
+//API for books id
+app.get("/get-book-id/:id", (request, response) => {
+  con.query(`
+  SELECT book.id, title, number_of_page, genre.genre, publisher_name, author_name, price, image, newness FROM book
+  INNER JOIN author on author.id = book.author
+  INNER JOIN genre on genre.id = book.genre
+  INNER JOIN publisher on publisher.id = book.publisher
+  WHERE book.id = ${request.params.id}`, function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+    response.end(JSON.stringify(result));
+  })
 })
+
+//API for all genre
+app.get("/get-all-genre", (request,response) => {
+  con.query(`SELECT * FROM genre`, function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+    response.end(JSON.stringify(result));
+  })
+});
+*/
