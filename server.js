@@ -103,7 +103,6 @@ app.get("/get-book-title/:titleName", (request, response) => {
 })
 
 
-
 app.get("/", (request,response) => {
     const responseObject = {
         text: "server is working on port!"
@@ -121,4 +120,8 @@ const server = app.listen(app.get("port"), function() {
 
 app.get("/img/:filename", function (req, res) {
     res.sendFile(path.join(__dirname, "img/" + req.params.filename));
+})
+
+app.get("/books_img/:filename", function (req, res) {
+  res.sendFile(path.join(__dirname, "books_img/" + req.params.filename));
 })
