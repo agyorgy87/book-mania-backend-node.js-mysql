@@ -51,6 +51,20 @@ app.get("/get-all-newness", (request,response) => {
     });
 })
 
+app.get("/get-all-stephen-king-books", (request,response) => {
+    con.query(`
+    SELECT book.id, title, number_of_page, genre.genre, publisher_name, author_name, price, image, newness FROM book
+    INNER JOIN author on author.id = book.author
+    INNER JOIN genre on genre.id = book.genre
+    INNER JOIN publisher on publisher.id = book.publisher
+    WHERE author_name LIKE "Stephen_King"
+    `, function (err, result, fields) {
+      if (err) throw err;
+      console.log(result);
+      response.end(JSON.stringify(result));
+    });
+})
+
 //API for books title names
 app.get("/get-book-title/:titleName", (request, response) => {
   con.query(`
