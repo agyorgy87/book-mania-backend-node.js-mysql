@@ -26,56 +26,70 @@ con.connect(
 
 //API for all books
 app.get("/get-all-books", (request,response) => {
-    con.query(`select book.id, title, number_of_page, genre.genre, publisher.publisher_name , author.author_name, price, image, newness from book
+    con.query(`select book.id, title, number_of_page, genre.genre_type, publisher.publisher_name , author.author_name, price, image, newness, img_directory from book
     inner join author on author.id = book.author
     inner join genre on genre.id = book.genre
     inner join publisher on publisher.id = book.publisher`, function (err, result, fields) {
-      if (err) throw err;
-      console.log(result);
-      response.end(JSON.stringify(result));
+        if (err) throw err;
+        console.log(result);
+        response.end(JSON.stringify(result));
     });
 })
 
 //API for all newness books
-app.get("/get-all-newness", (request,response) => {
+app.get("/get-all-by-newness/:newness", (request,response) => {
     con.query(`
-    SELECT book.id, title, number_of_page, genre.genre, publisher_name, author_name, price, image, newness FROM book
+    SELECT book.id, title, number_of_page, genre.genre_type, publisher_name, author_name, price, image, newness, img_directory FROM book
     INNER JOIN author on author.id = book.author
     INNER JOIN genre on genre.id = book.genre
     INNER JOIN publisher on publisher.id = book.publisher
-    WHERE newness = 1
-    `, function (err, result, fields) {
-      if (err) throw err;
-      console.log(result);
-      response.end(JSON.stringify(result));
+    WHERE newness = ${request.params.newness}`, function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+        response.end(JSON.stringify(result));
     });
 })
 
-app.get("/get-all-stephen-king-books", (request,response) => {
+//API for all stephen king books
+app.get("/get-all-author/:author_name", (request,response) => {
     con.query(`
-    SELECT book.id, title, number_of_page, genre.genre, publisher_name, author_name, price, image, newness FROM book
+    SELECT book.id, title, number_of_page, genre.genre_type, publisher_name, author_name, price, image, img_directory newness FROM book
     INNER JOIN author on author.id = book.author
     INNER JOIN genre on genre.id = book.genre
     INNER JOIN publisher on publisher.id = book.publisher
-    WHERE author_name LIKE "Stephen_King"
-    `, function (err, result, fields) {
+    WHERE author_name LIKE "${request.params.author_name}"`, function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+        response.end(JSON.stringify(result));
+    });
+})
+
+
+app.get("/get-all-by-publisher-and-not-genre-type/:publisher/:genreType", (request,response) => {
+  con.query(`
+  SELECT book.id, title, number_of_page, genre.genre_type, publisher_name, author_name, price, image, newness FROM book
+  INNER JOIN author on author.id = book.author
+  INNER JOIN genre on genre.id = book.genre
+  INNER JOIN publisher on publisher.id = book.publisher
+  WHERE publisher_name LIKE "${request.params.publisher}" AND genre_type <> "${request.params.genreType}"
+  `, function (err, result, fields) {
       if (err) throw err;
       console.log(result);
       response.end(JSON.stringify(result));
-    });
+  });
 })
 
 //API for books title names
 app.get("/get-book-title/:titleName", (request, response) => {
-  con.query(`
-  SELECT book.id, title, number_of_page, genre.genre, publisher_name, author_name, price, image, newness FROM book
-  INNER JOIN author on author.id = book.author
-  INNER JOIN genre on genre.id = book.genre
-  INNER JOIN publisher on publisher.id = book.publisher
-  WHERE title LIKE "%${request.params.titleName}%" OR author_name LIKE "%${request.params.titleName}%"`, function (err, result, fields) {
-    if (err) throw err;
-    console.log(result);
-    response.end(JSON.stringify(result));
+    con.query(`
+    SELECT book.id, title, number_of_page, genre.genre_type, publisher_name, author_name, price, image, newness FROM book
+    INNER JOIN author on author.id = book.author
+    INNER JOIN genre on genre.id = book.genre
+    INNER JOIN publisher on publisher.id = book.publisher
+    WHERE title LIKE "%${request.params.titleName}%" OR author_name LIKE "%${request.params.titleName}%"`, function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+        response.end(JSON.stringify(result));
   })
 })
 
@@ -85,8 +99,8 @@ app.get("/img/:filename", function (req, res) {
 })
 
 //API for books image
-app.get("/books_img/:filename", function (req, res) {
-  res.sendFile(path.join(__dirname, "books_img/" + req.params.filename));
+app.get("/books_img/:directory/:filename", function (req, res) {
+  res.sendFile(path.join(__dirname, "books_img/" + req.params.directory + "/" + req.params.filename));
 })
 
 
@@ -129,7 +143,7 @@ app.get("/get-publisher-id/:id", (request, response) => {
 //API for books id
 app.get("/get-book-id/:id", (request, response) => {
   con.query(`
-  SELECT book.id, title, number_of_page, genre.genre, publisher_name, author_name, price, image, newness FROM book
+  SELECT book.id, title, number_of_page, genre.genre_type, publisher_name, author_name, price, image, newness FROM book
   INNER JOIN author on author.id = book.author
   INNER JOIN genre on genre.id = book.genre
   INNER JOIN publisher on publisher.id = book.publisher
