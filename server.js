@@ -53,7 +53,7 @@ app.get("/get-all-by-newness/:newness", (request,response) => {
 //API for all stephen king books
 app.get("/get-all-author/:author_name", (request,response) => {
     con.query(`
-    SELECT book.id, title, number_of_page, genre.genre_type, publisher_name, author_name, price, image, img_directory newness FROM book
+    SELECT book.id, title, number_of_page, genre.genre_type, publisher_name, author_name, price, image, newness, img_directory FROM book
     INNER JOIN author on author.id = book.author
     INNER JOIN genre on genre.id = book.genre
     INNER JOIN publisher on publisher.id = book.publisher
@@ -67,7 +67,7 @@ app.get("/get-all-author/:author_name", (request,response) => {
 
 app.get("/get-all-by-publisher-and-not-genre-type/:publisher/:genreType", (request,response) => {
   con.query(`
-  SELECT book.id, title, number_of_page, genre.genre_type, publisher_name, author_name, price, image, newness FROM book
+  SELECT book.id, title, number_of_page, genre.genre_type, publisher_name, author_name, price, image, newness, img_directory FROM book
   INNER JOIN author on author.id = book.author
   INNER JOIN genre on genre.id = book.genre
   INNER JOIN publisher on publisher.id = book.publisher
@@ -82,7 +82,7 @@ app.get("/get-all-by-publisher-and-not-genre-type/:publisher/:genreType", (reque
 //API for books title names
 app.get("/get-book-title/:titleName", (request, response) => {
     con.query(`
-    SELECT book.id, title, number_of_page, genre.genre_type, publisher_name, author_name, price, image, newness FROM book
+    SELECT book.id, title, number_of_page, genre.genre_type, publisher_name, author_name, price, image, newness, img_directory FROM book
     INNER JOIN author on author.id = book.author
     INNER JOIN genre on genre.id = book.genre
     INNER JOIN publisher on publisher.id = book.publisher
