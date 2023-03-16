@@ -26,7 +26,7 @@ con.connect(
 
 //API for all books
 app.get("/get-all-books", (request,response) => {
-    con.query(`select book.id, title, number_of_page, genre.genre_type, publisher.publisher_name , author.author_name, price, image, newness, img_directory from book
+    con.query(`select book.id, title, number_of_page, genre.genre_type, publisher.publisher_name , author.author_name, price, image, newness, release_date, img_directory from book
     inner join author on author.id = book.author
     inner join genre on genre.id = book.genre
     inner join publisher on publisher.id = book.publisher`, function (err, result, fields) {
@@ -107,8 +107,19 @@ app.get("/get-all-by-price/:fromPrice/:toPrice", (request,response) => {
   });
 })
 
-
-
+//API for all release date
+app.get("/get-all-by-release-date/:fromDate/:toDate", (request,response) => {
+  con.query(`
+  SELECT book.id, title, number_of_page, genre.genre_type, publisher_name, author_name, price, image, newness, release_date, img_directory FROM book
+  INNER JOIN author on author.id = book.author
+  INNER JOIN genre on genre.id = book.genre
+  INNER JOIN publisher on publisher.id = book.publisher
+  WHERE release_date > ${request.params.fromDate} AND release_date < ${request.params.toDate}`, function (err, result, fields) {
+      if (err) throw err;
+      console.log(result);
+      response.end(JSON.stringify(result));
+  });
+})
 
 
 //API for books title names
