@@ -121,6 +121,19 @@ app.get("/get-all-by-release-date/:fromDate/:toDate", (request,response) => {
   });
 })
 
+//API for all special
+app.get("/get-all-by-special/:specialSearch", (request,response) => {
+  con.query(`
+  SELECT book.id, title, number_of_page, genre.genre_type, publisher_name, author_name, price, image, newness, release_date, img_directory FROM book
+  INNER JOIN author on author.id = book.author
+  INNER JOIN genre on genre.id = book.genre
+  INNER JOIN publisher on publisher.id = book.publisher
+  ORDER BY ${request.params.specialSearch} ASC`, function (err, result, fields) {
+      if (err) throw err;
+      console.log(result);
+      response.end(JSON.stringify(result));
+  });
+})
 
 //API for books title names
 app.get("/get-book-title/:titleName", (request, response) => {
