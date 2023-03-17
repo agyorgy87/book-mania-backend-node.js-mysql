@@ -64,6 +64,7 @@ app.get("/get-all-by-author/:author_name", (request,response) => {
   });
 })
 
+/*
 //API for a publisher, display all types except one
 app.get("/get-all-by-publisher-and-not-genre-type/:publisher/:genreType", (request,response) => {
   con.query(`
@@ -78,7 +79,7 @@ app.get("/get-all-by-publisher-and-not-genre-type/:publisher/:genreType", (reque
       response.end(JSON.stringify(result));
   });
 })
-
+*/
 //API for all genre books
 app.get("/get-all-by-genre/:genreType", (request,response) => {
   con.query(`
