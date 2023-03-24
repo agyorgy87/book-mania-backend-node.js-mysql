@@ -64,6 +64,17 @@ app.get("/get-all-by-author/:author_name", (request,response) => {
   });
 })
 
+//API for all genre
+app.get("/get-all-genre", (request,response) => {
+  con.query(`
+  SELECT * FROM genre
+  `, function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+    response.end(JSON.stringify(result));
+  })
+});
+
 /*
 //API for a publisher, display all types except one
 app.get("/get-all-by-publisher-and-not-genre-type/:publisher/:genreType", (request,response) => {
@@ -123,13 +134,23 @@ app.get("/get-all-by-release-date/:fromDate/:toDate", (request,response) => {
 })
 
 //API for all special
-app.get("/get-all-by-special/:specialSearch", (request,response) => {
+app.get("/get-all-by-special/:specialSearch/:specialOrder", (request,response) => {
+  let specialSearch = "";
+  if(request.params.specialSearch === "title_name"){
+     specialSearch = "title"
+  }
+  else if(request.params.specialSearch === "number_of_page_name"){
+    specialSearch = "number_of_page"
+  }
+  else if(request.params.specialSearch === "price_name"){
+    specialSearch = "price"
+  }
   con.query(`
   SELECT book.id, title, number_of_page, genre.genre_type, publisher_name, author_name, price, image, newness, release_date, img_directory FROM book
   INNER JOIN author on author.id = book.author
   INNER JOIN genre on genre.id = book.genre
   INNER JOIN publisher on publisher.id = book.publisher
-  ORDER BY ${request.params.specialSearch} ASC`, function (err, result, fields) {
+  ORDER BY ${specialSearch} ${specialOrder}`, function (err, result, fields) {
       if (err) throw err;
       console.log(result);
       response.end(JSON.stringify(result));
@@ -224,12 +245,5 @@ app.get("/get-book-id/:id", (request, response) => {
   })
 })
 
-//API for all genre
-app.get("/get-all-genre", (request,response) => {
-  con.query(`SELECT * FROM genre`, function (err, result, fields) {
-    if (err) throw err;
-    console.log(result);
-    response.end(JSON.stringify(result));
-  })
-});
+
 */
