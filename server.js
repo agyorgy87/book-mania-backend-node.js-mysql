@@ -75,6 +75,15 @@ app.get("/get-all-genre", (request,response) => {
   })
 });
 
+//API for all publisher
+app.get("/get-all-publisher", (request,response) => {
+  con.query(`SELECT * FROM publisher`, function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+    response.end(JSON.stringify(result));
+  })
+});
+
 /*
 //API for a publisher, display all types except one
 app.get("/get-all-by-publisher-and-not-genre-type/:publisher/:genreType", (request,response) => {
@@ -150,7 +159,7 @@ app.get("/get-all-by-special/:specialSearch/:specialOrder", (request,response) =
   INNER JOIN author on author.id = book.author
   INNER JOIN genre on genre.id = book.genre
   INNER JOIN publisher on publisher.id = book.publisher
-  ORDER BY ${specialSearch} ${specialOrder}`, function (err, result, fields) {
+  ORDER BY "${specialSearch}" ${specialOrder}`, function (err, result, fields) {
       if (err) throw err;
       console.log(result);
       response.end(JSON.stringify(result));
@@ -213,14 +222,6 @@ const server = app.listen(app.get("port"), function() {
 
 //APIs which are not necessary
 /*
-//API for all publisher
-app.get("/get-all-publisher", (request,response) => {
-  con.query(`SELECT * FROM publisher`, function (err, result, fields) {
-    if (err) throw err;
-    console.log(result);
-    response.end(JSON.stringify(result));
-  })
-});
 
 //API for publisher id
 app.get("/get-publisher-id/:id", (request, response) => {
