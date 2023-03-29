@@ -159,7 +159,7 @@ app.get("/get-all-by-special/:specialSearch/:specialOrder", (request,response) =
   INNER JOIN author on author.id = book.author
   INNER JOIN genre on genre.id = book.genre
   INNER JOIN publisher on publisher.id = book.publisher
-  ORDER BY "${specialSearch}" ${specialOrder}`, function (err, result, fields) {
+  ORDER BY ${specialSearch} ${request.params.specialOrder}`, function (err, result, fields) {
       if (err) throw err;
       console.log(result);
       response.end(JSON.stringify(result));
