@@ -193,6 +193,19 @@ app.get("/get-book-title/:titleName", (request, response) => {
   })
 })
 
+//API for registration
+app.post("/register",(request, response) => {
+  console.log(request.body);
+  console.log(request.body.name);
+  con.query(`
+  INSERT INTO users VALUES (null, "${request.body.firstName}", "${request.body.lastName}", ${request.body.gender}, "${request.body.address}", "${request.body.city}", ${request.body.zipCode}, "${request.body.email}", sha1("salt${request.body.pass}"))`,
+  function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+    response.end(JSON.stringify({succes:true}));
+  }) 
+})
+
 //API for coupon code image
 app.get("/img/:filename", function (req, res) {
     res.sendFile(path.join(__dirname, "img/" + req.params.filename));
