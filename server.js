@@ -26,7 +26,7 @@ con.connect(
 
 //API for all books
 app.get("/get-all-books", (request,response) => {
-    con.query(`select book.id, title, number_of_page, genre.genre_type, publisher.publisher_name , author.author_name, price, image, newness, release_date, img_directory from book
+    con.query(`select book.id, title, number_of_page, genre.genre_type, publisher.publisher_name , author.author_name, price, image, newness, release_date, img_directory, image_big, book_description from book
     inner join author on author.id = book.author
     inner join genre on genre.id = book.genre
     inner join publisher on publisher.id = book.publisher`, function (err, result, fields) {
