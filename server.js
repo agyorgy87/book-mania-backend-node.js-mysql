@@ -1,6 +1,8 @@
 const express = require("express");
 let cors = require("cors");
 let fileSystem = require("fs");
+let jwt = require('jsonwebtoken');
+const secretKey = "Asdfjkle987123!?";
 
 const app = express();
 const path = require("path");
@@ -216,6 +218,25 @@ app.get("/img/:filename", function (req, res) {
 //API for books image
 app.get("/books_img/:directory/:filename", function (req, res) {
   res.sendFile(path.join(__dirname, "books_img/" + req.params.directory + "/" + req.params.filename));
+})
+
+app.post("/auth",function (request, response) {
+  con.query(`
+  SELECT * FROM users
+  WHERE email = "${request.body.email}" AND pass = sha1("${request.body.pass}");`,
+  function (err, result, fields) {
+    if (err) throw err;
+    if(result.length === 0) {
+      throw "hibás felhasználónév és jelszó"
+    }else{
+      let token = jwt.sign(result[0], secretKey);
+      let obj = { jwt: token }
+      response.end(JSON.stringify(obj));
+    }
+    console.log(result);
+  }) 
+
+  
 })
 
 
