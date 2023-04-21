@@ -13,6 +13,7 @@ app.use(express.json());
 app.set("port", 4000);
 
 const mysql = require('mysql');
+const { error } = require("console");
 
 const con = mysql.createConnection({
   host: "localhost",
@@ -227,16 +228,35 @@ app.post("/auth",function (request, response) {
   function (err, result, fields) {
     if (err) throw err;
     if(result.length === 0) {
-      throw "hibás felhasználónév és jelszó"
+      throw "incorrect email and password"
     }else{
-      let token = jwt.sign(result[0], secretKey);
-      let obj = { jwt: token }
+      let user = {id: result[0].id, email: result[0].email, exp: Math.floor(Date.now() / 1000) + (60 * 60)}
+      let token = jwt.sign(user, secretKey);
+      let obj = { jwt: token, firstName: result[0].first_name};
       response.end(JSON.stringify(obj));
     }
     console.log(result);
   }) 
+})
 
-  
+function verifyToken (token) {
+    try{
+      jwt.verify(token, secretKey)
+      return true;
+    }catch(errorMessage){
+      return false;
+    } 
+}
+
+app.post("/place-order", function (request, response) {
+  let verify = verifyToken(request.body.token) 
+  if(verify === true) {
+    let obj = {success: true, message: "successful order"}
+    response.end(JSON.stringify(obj));
+  }else{
+    let obj = {error: "invalid token"}
+    response.end(JSON.stringify(obj));
+  }
 })
 
 
