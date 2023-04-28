@@ -230,9 +230,10 @@ app.post("/auth",function (request, response) {
     if(result.length === 0) {
       throw "incorrect email and password"
     }else{
-      let user = {id: result[0].id, email: result[0].email, exp: Math.floor(Date.now() / 1000) + (60 * 60)}
+      let expire = Math.floor(Date.now() / 1000) + (60 * 60)
+      let user = {id: result[0].id, email: result[0].email, exp: expire}
       let token = jwt.sign(user, secretKey);
-      let obj = { jwt: token, firstName: result[0].first_name};
+      let obj = {jwt: token, firstName: result[0].first_name, expireDate: expire};
       response.end(JSON.stringify(obj));
     }
     console.log(result);
