@@ -228,7 +228,8 @@ app.post("/auth",function (request, response) {
   function (err, result, fields) {
     if (err) throw err;
     if(result.length === 0) {
-      throw "incorrect email and password"
+      let userObj = {error: "incorrect email or password"};
+      response.end(JSON.stringify(userObj));
     }else{
       let expire = Math.floor(Date.now() / 1000) + (60 * 60)
       let user = {id: result[0].id, email: result[0].email, exp: expire}
@@ -258,6 +259,20 @@ app.post("/place-order", function (request, response) {
     let obj = {error: "invalid token"}
     response.end(JSON.stringify(obj));
   }
+})
+
+app.get("/get-book-by-id/:id", function (request, response) {
+  con.query(`
+    SELECT book.id, title, number_of_page, genre.genre_type, publisher.publisher_name , author.author_name, price, image, newness, release_date, img_directory, image_big, book_description FROM book
+    INNER JOIN author ON author.id = book.author
+    INNER JOIN genre ON genre.id = book.genre
+    INNER JOIN publisher ON publisher.id = book.publisher
+    WHERE book.id = ${request.params.id}
+    `, function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+        response.end(JSON.stringify(result[0]));
+    });
 })
 
 
