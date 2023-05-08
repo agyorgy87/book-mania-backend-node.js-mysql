@@ -108,7 +108,7 @@ app.get("/get-all-by-publisher-and-not-genre-type/:publisher/:genreType", (reque
 //API for all genre books
 app.get("/get-all-by-genre/:genreType", (request,response) => {
   con.query(`
-  SELECT title, genre.genre_type, author_name, price, image,  img_directory FROM book
+  SELECT book.id, title, genre.genre_type, author_name, price, image,  img_directory FROM book
   INNER JOIN author ON author.id = book.author
   INNER JOIN genre ON genre.id = book.genre
   INNER JOIN publisher ON publisher.id = book.publisher
@@ -122,7 +122,7 @@ app.get("/get-all-by-genre/:genreType", (request,response) => {
 //API for all price
 app.get("/get-all-by-price/:fromPrice/:toPrice", (request,response) => {
   con.query(`
-  SELECT title, author_name, price, image, img_directory FROM book
+  SELECT book.id, title, author_name, price, image, img_directory FROM book
   INNER JOIN author on author.id = book.author
   INNER JOIN genre on genre.id = book.genre
   INNER JOIN publisher on publisher.id = book.publisher
@@ -136,7 +136,7 @@ app.get("/get-all-by-price/:fromPrice/:toPrice", (request,response) => {
 //API for all release date
 app.get("/get-all-by-release-date/:fromDate/:toDate", (request,response) => {
   con.query(`
-  SELECT title, publisher_name, author_name, price, image, release_date, img_directory FROM book
+  SELECT book.id, title, publisher_name, author_name, price, image, release_date, img_directory FROM book
   INNER JOIN author ON author.id = book.author
   INNER JOIN genre ON genre.id = book.genre
   INNER JOIN publisher ON publisher.id = book.publisher
@@ -160,7 +160,7 @@ app.get("/get-all-by-special/:specialSearch/:specialOrder", (request,response) =
     specialSearch = "price"
   }
   con.query(`
-  SELECT title, number_of_page, author_name, price, image, img_directory FROM book
+  SELECT book.id title, number_of_page, author_name, price, image, img_directory FROM book
   INNER JOIN author ON author.id = book.author
   INNER JOIN genre ON genre.id = book.genre
   INNER JOIN publisher ON publisher.id = book.publisher
