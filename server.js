@@ -198,6 +198,17 @@ app.get("/get-book-title/:titleName", (request, response) => {
   })
 })
 
+//API for add wishlist
+app.post("/add-wishlist",(request, response) => {
+  con.query(`
+  INSERT INTO wishlist VALUES (NULL, ${request.body.userId}, ${request.bookId})
+  `,
+  function (err, result, fields) {
+    if (err) throw err;
+    response.end(JSON.stringify({succes:true}));
+  }) 
+})
+
 //API for registration
 app.post("/register",(request, response) => {
   console.log(request.body);
@@ -234,7 +245,7 @@ app.post("/auth",function (request, response) {
       let expire = Math.floor(Date.now() / 1000) + (60 * 60)
       let user = {id: result[0].id, email: result[0].email, exp: expire}
       let token = jwt.sign(user, secretKey);
-      let obj = {jwt: token, firstName: result[0].first_name, expireDate: expire};
+      let obj = {id: result[0].id, jwt: token, firstName: result[0].first_name, expireDate: expire};
       response.end(JSON.stringify(obj));
     }
     console.log(result);
