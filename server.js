@@ -201,12 +201,36 @@ app.get("/get-book-title/:titleName", (request, response) => {
 //API for add wishlist
 app.post("/add-wishlist",(request, response) => {
   con.query(`
-  INSERT INTO wishlist VALUES (NULL, ${request.body.userId}, ${request.bookId})
+  INSERT INTO wishlist VALUES (NULL, ${request.body.userId}, ${request.body.bookId})
   `,
   function (err, result, fields) {
     if (err) throw err;
-    response.end(JSON.stringify({succes:true}));
+    response.end(JSON.stringify({success:true}));
   }) 
+})
+
+//API for delete wishlist
+app.post("/delete-wishlist", (request, response) => {
+  con.query(`
+  DELETE FROM wishlist WHERE user_id = ${request.body.userId} AND book_id = ${request.body.bookId}
+  `,
+  function (err, result, fields) {
+    if (err) throw err;
+    response.end(JSON.stringify({success:true}));
+  })
+})
+
+//API for display wishlist
+app.get("/display-wishlist/:userId/:bookId", (request, response) => {
+  con.query(`
+  SELECT user_id, book_id FROM wishlist
+  WHERE user_id = ${request.params.userId} AND book_id = ${request.params.bookId}
+  `,
+  function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+    response.end(JSON.stringify({success:true}));
+  })
 })
 
 //API for registration
