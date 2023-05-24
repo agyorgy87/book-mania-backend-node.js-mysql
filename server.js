@@ -229,7 +229,23 @@ app.get("/display-wishlist/:userId/:bookId", (request, response) => {
   function (err, result, fields) {
     if (err) throw err;
     console.log(result);
-    response.end(JSON.stringify({success:true}));
+    //response.end(JSON.stringify({success:true}));
+    response.end(JSON.stringify(result));
+  })
+})
+
+//API for login user - wishlist
+app.get("/user-wishlist/:userId", (request, response) => {
+  con.query(`
+  SELECT * FROM bookmania.wishlist
+  INNER JOIN book ON book.id = wishlist.book_id
+  INNER JOIN author ON author.id = book.author
+  WHERE user_id = ${request.params.userId}
+  `,
+  function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+    response.end(JSON.stringify(result));
   })
 })
 
