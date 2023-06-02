@@ -326,6 +326,28 @@ app.get("/get-book-by-id/:id", function (request, response) {
     });
 })
 
+app.get("/get-coupon-code/:couponCode", function (request, response) {
+  con.query(`
+    SELECT * FROM bookmania.coupons
+    WHERE coupon = "${request.params.couponCode}" AND usedornot = 0;
+    `, function (err, result, fields) { 
+      if(result.length !== 0 && result[0].usedornot === 0){
+        response.end(JSON.stringify({success: true, bookMultiple: result[0].multiple}))
+      }else{
+        response.end(JSON.stringify({success: false}))
+      }
+    });
+})
+
+app.get("/set-coupon-used/:couponCode", function (request, response) {
+  con.query(`
+    UPDATE bookmania.coupons SET usedornot = '1' WHERE (coupon = "${couponCode}");
+    `, function (err, result, fields) { 
+      response.end(JSON.stringify({success:true}));
+    });
+})
+
+
 
 app.get("/", (request,response) => {
     const responseObject = {
