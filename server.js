@@ -160,7 +160,7 @@ app.get("/get-all-by-special/:specialSearch/:specialOrder", (request,response) =
     specialSearch = "price"
   }
   con.query(`
-  SELECT book.id title, number_of_page, author_name, price, image, img_directory FROM book
+  SELECT book.id, title, number_of_page, author_name, price, image, img_directory FROM book
   INNER JOIN author ON author.id = book.author
   INNER JOIN genre ON genre.id = book.genre
   INNER JOIN publisher ON publisher.id = book.publisher
@@ -341,13 +341,23 @@ app.get("/get-coupon-code/:couponCode", function (request, response) {
 
 app.get("/set-coupon-used/:couponCode", function (request, response) {
   con.query(`
-    UPDATE bookmania.coupons SET usedornot = '1' WHERE (coupon = "${couponCode}");
+    UPDATE bookmania.coupons SET usedornot = '1' WHERE (coupon = "${request.params.couponCode}");
     `, function (err, result, fields) { 
       response.end(JSON.stringify({success:true}));
     });
 })
 
-
+//API for contacts
+app.post("/message-sender", (request, response) => {
+    console.log(request.body);
+    con.query(`
+    INSERT INTO contacts VALUES (null, "${request.body.name}", "${request.body.email}", "${request.body.text}")`,
+    function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+    response.end(JSON.stringify({succes:true}));
+  }) 
+})
 
 app.get("/", (request,response) => {
     const responseObject = {
