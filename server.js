@@ -272,6 +272,8 @@ app.get("/books_img/:directory/:filename", function (req, res) {
   res.sendFile(path.join(__dirname, "books_img/" + req.params.directory + "/" + req.params.filename));
 })
 
+
+//API for authentication
 app.post("/auth",function (request, response) {
   con.query(`
   SELECT * FROM users
@@ -312,6 +314,20 @@ app.post("/place-order", function (request, response) {
   }
 })
 
+//API for forgot password
+app.get("/get-forgot-password/:userEmail", function (request, response) {
+    con.query(`
+    SELECT * FROM users
+    WHERE email = "${request.params.userEmail}";`,
+    function (err, result, fields) {
+        if(result.length === 0) {
+            response.end(JSON.stringify({success: false}))
+        }else{
+            response.end(JSON.stringify({success: true}))
+        }
+    });
+})
+
 app.get("/get-book-by-id/:id", function (request, response) {
   con.query(`
     SELECT book.id, title, number_of_page, genre.genre_type, publisher.publisher_name , author.author_name, price, image, newness, release_date, img_directory, image_big, book_description FROM book
@@ -326,6 +342,7 @@ app.get("/get-book-by-id/:id", function (request, response) {
     });
 })
 
+//API's for coupon codes
 app.get("/get-coupon-code/:couponCode", function (request, response) {
   con.query(`
     SELECT * FROM bookmania.coupons
