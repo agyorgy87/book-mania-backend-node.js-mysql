@@ -262,6 +262,21 @@ app.post("/register",(request, response) => {
   }) 
 })
 
+//API for registered email address
+//if the user has already registered with the same email address, he will receive an alert message.
+app.get("/get-user-email/:userEmail", function (request, response) {
+  con.query(`
+  SELECT * FROM users
+  WHERE email = "${request.params.userEmail}";`,
+  function (err, result, fields) {
+      if(result.length === 0) {
+          response.end(JSON.stringify({success: false}))
+      }else{
+          response.end(JSON.stringify({success: true}))
+      }
+  });
+})
+
 //API for coupon code image
 app.get("/img/:filename", function (req, res) {
     res.sendFile(path.join(__dirname, "img/" + req.params.filename));
