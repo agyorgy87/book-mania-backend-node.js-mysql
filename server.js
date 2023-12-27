@@ -278,15 +278,14 @@ app.get("/get-user-email/:userEmail", function (request, response) {
 })
 
 //API for coupon code image
-app.get("/img/:filename", function (req, res) {
-    res.sendFile(path.join(__dirname, "img/" + req.params.filename));
+app.get("/img/:filename", function (request, response) {
+    response.sendFile(path.join(__dirname, "img/" + request.params.filename));
 })
 
 //API for books image
-app.get("/books_img/:directory/:filename", function (req, res) {
-  res.sendFile(path.join(__dirname, "books_img/" + req.params.directory + "/" + req.params.filename));
+app.get("/books_img/:directory/:filename", function (request, response) {
+  response.sendFile(path.join(__dirname, "books_img/" + request.params.directory + "/" + request.params.filename));
 })
-
 
 //API for authentication
 app.post("/auth",function (request, response) {
@@ -379,6 +378,17 @@ app.get("/set-coupon-used/:couponCode", function (request, response) {
     });
 })
 
+//API's for shipping
+app.get("/get-registered-user/:userId", (request,response) => {
+    con.query(`
+      SELECT * FROM users WHERE id = ${request.params.userId};
+    `, function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+        response.end(JSON.stringify(result));
+    });
+})
+
 //API for contacts
 app.post("/message-sender", (request, response) => {
     console.log(request.body);
@@ -397,7 +407,6 @@ app.get("/", (request,response) => {
     }
     response.end(JSON.stringify(responseObject));
 });
-
 
 const server = app.listen(app.get("port"), function() {
 
