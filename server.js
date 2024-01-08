@@ -187,7 +187,7 @@ app.get("/get-all-by-publishers/:publisherSearch", (request,response) => {
 //API for books title names
 app.get("/get-book-title/:titleName", (request, response) => {
     con.query(`
-    SELECT title, author_name, price, image, img_directory FROM book
+    SELECT book.id, title, author_name, price, image, img_directory FROM book
     INNER JOIN author ON author.id = book.author
     INNER JOIN genre ON genre.id = book.genre
     INNER JOIN publisher ON publisher.id = book.publisher
