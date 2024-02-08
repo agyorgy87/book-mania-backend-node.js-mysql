@@ -439,6 +439,26 @@ app.get("/get-registered-user/:userId", (request,response) => {
         });
 })
 
+//API's send order
+app.post("/send-order", (request,response) => {
+    console.log(request);
+    con.query(`
+        INSERT INTO bookmania.orders (user_id, total_price, discount, zip_code, city, address) 
+        VALUES (${request.body.userId}, ${request.body.totalPrice}, ${request.body.discount}, "${request.body.address.zipCode}", 
+        "${request.body.address.city}", "${request.body.address.address}");
+        `, function (err, result, fields) {
+            if (err) throw err;
+            console.log(result.insertId);
+            for(let i = 0; i < request.body.books.length; i++){
+                con.query(`
+                INSERT INTO bookmania.order_books (book_id, book_price, order_id, quantity) 
+                VALUES (${request.body.books[i].id}, ${request.body.totalPrice}, ${result.insertId}, ${request.body.books[i].quantity});
+                `, () => {})
+            }
+            response.end(JSON.stringify(result));
+        });
+})
+
 //API for contacts
 app.post("/message-sender", (request, response) => {
     console.log(request.body);
