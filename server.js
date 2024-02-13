@@ -452,7 +452,7 @@ app.post("/send-order", (request,response) => {
             for(let i = 0; i < request.body.books.length; i++){
                 con.query(`
                 INSERT INTO bookmania.order_books (book_id, book_price, order_id, quantity) 
-                VALUES (${request.body.books[i].id}, ${request.body.totalPrice}, ${result.insertId}, ${request.body.books[i].quantity});
+                VALUES (${request.body.books[i].id}, ${request.body.books[i].price}, ${result.insertId}, ${request.body.books[i].quantity});
                 `, () => {})
             }
             response.end(JSON.stringify(result));
