@@ -18,21 +18,24 @@ app.set("port", process.env.PORT || 3001);
 const mysql = require('mysql2');
 const { error } = require("console");
 
-const con = mysql.createConnection({
-  host: process.env.MYSQL_HOST,
-  port: process.env.MYSQL_PORT,
-  user: process.env.MYSQL_USERNAME,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE,
-}); 
-
-con.connect(
-  function(err) {
-    if (err) throw err}
-);
+const getMysqlConnection = () => {
+    const con = mysql.createConnection({
+        host: process.env.MYSQL_HOST,
+        port: process.env.MYSQL_PORT,
+        user: process.env.MYSQL_USERNAME,
+        password: process.env.MYSQL_PASSWORD,
+        database: process.env.MYSQL_DATABASE,
+    }); 
+    con.connect(
+        function(err) {
+          if (err) throw err}
+    );
+    return con;
+}
 
 //API for all books
 app.get("/get-all-books", (request,response) => {
+    const con = getMysqlConnection();
     con.query(`
     SELECT book.id, title, number_of_page, genre.genre_type, publisher.publisher_name , author.author_name, price, image, newness, release_date, img_directory, image_big, book_description FROM book
     INNER JOIN author ON author.id = book.author
@@ -42,6 +45,7 @@ app.get("/get-all-books", (request,response) => {
         console.log(result);
         response.end(JSON.stringify(result));
     });
+    con.end();
 })
 
 //API for all newness books
