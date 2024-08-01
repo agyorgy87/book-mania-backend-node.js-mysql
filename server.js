@@ -14,6 +14,7 @@ app.use(express.static("assets"));
 app.use(cors());
 app.use(express.json());
 app.set("port", process.env.PORT || 3001);
+//app.set("port", process.env.PORT || 3000);
 
 const mysql = require('mysql2');
 const { error } = require("console");
