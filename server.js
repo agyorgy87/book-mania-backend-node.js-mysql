@@ -49,6 +49,7 @@ app.get("/get-all-books", (request,response) => {
     con.end();
 })
 
+
 //API for all newness books
 app.get("/get-all-by-newness/:newness", (request,response) => {
     const con = getMysqlConnection();
@@ -58,7 +59,7 @@ app.get("/get-all-by-newness/:newness", (request,response) => {
     INNER JOIN genre ON genre.id = book.genre
     INNER JOIN publisher ON publisher.id = book.publisher
     WHERE newness = ${request.params.newness}`, function (err, result, fields) {
-      /*
+        /*
         if (err) throw err;
         console.log(result);
         response.end(JSON.stringify(result));
@@ -70,9 +71,12 @@ app.get("/get-all-by-newness/:newness", (request,response) => {
             console.log(result);
             response.status(200).json(result);
         }
+            
     });
     con.end();
 })
+
+
 
 //API for all authors
 app.get("/get-all-by-author/:author_name", (request,response) => {
@@ -522,7 +526,7 @@ app.post("/send-order", (request,response) => {
 app.post("/message-sender", (request, response) => {
     const con = getMysqlConnection();
     con.query(`
-        INSERT INTO contacts VALUES (null, "${request.body.name}", "${request.body.email}", "${request.body.text}")`,
+        INSERT INTO contacts VALUES (null, "${request.body.senderName}", "${request.body.senderEmail}", "${request.body.senderMessage}")`,
         function (err, result, fields) {
         if (err) throw err;
         console.log(result);
@@ -530,6 +534,7 @@ app.post("/message-sender", (request, response) => {
     }) 
     con.end();
 })
+//INSERT INTO contacts VALUES (null, "${request.body.name}", "${request.body.email}", "${request.body.text}")`,
 
 app.get("/", (request,response) => {
     const con = getMysqlConnection();
