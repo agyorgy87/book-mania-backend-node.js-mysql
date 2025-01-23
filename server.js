@@ -534,7 +534,7 @@ app.post("/message-sender", (request, response) => {
     }) 
     con.end();
 })
-//INSERT INTO contacts VALUES (null, "${request.body.name}", "${request.body.email}", "${request.body.text}")`,
+
 
 app.get("/", (request,response) => {
     const con = getMysqlConnection();
