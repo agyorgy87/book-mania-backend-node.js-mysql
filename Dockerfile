@@ -14,6 +14,7 @@ RUN mkdir bookmania
 WORKDIR bookmania
 COPY . . 
 RUN npm install 
+RUN chmod +x run-docker.sh
 CMD ["/bookmania/run-docker.sh"]
 #EXPOSE 3306 mysql
 EXPOSE 3001
